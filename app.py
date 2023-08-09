@@ -31,7 +31,9 @@ def find_ncm(ean):
         return('request error!')
     
 if __name__ == '__main__':
-    for i in range(20)
+    for i in range(20):
+        pass
+    
     ean = '7891910000197'
     consulta = find_ncm(ean)
     print('Descricao: ',consulta['description'])
