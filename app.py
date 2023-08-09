@@ -26,16 +26,17 @@ def find_ncm(ean):
             "cest": data['cest']['code']
         }
         
-        return(json.dumps(value))
+        return(value)
     else:
         return('request error!')
     
 if __name__ == '__main__':
+    for i in range(20)
     ean = '7891910000197'
     consulta = find_ncm(ean)
-    print('descricao: ', consulta['description'])
-    print('ncm: ', consulta['ncm'])
-    print('cest: ', consulta['cest'])
+    print('Descricao: ',consulta['description'])
+    print('Ncm: ',consulta['ncm'])
+    print('Cest: ',consulta['cest'])
         
         
     
