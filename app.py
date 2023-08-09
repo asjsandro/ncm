@@ -30,7 +30,6 @@ def find_ncm(ean):
     else:
         return('request error!')
     
-
 if __name__ == '__main__':
     ean = '7891910000197'
     consulta = find_ncm(ean)
