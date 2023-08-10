@@ -7,13 +7,12 @@ import pyodbc
 
 #Get environment variavel
 config = configparser.ConfigParser()
-config.read('./config.ini')
+config.read('config.ini')
 host =  config['VM']['host']
 database = config['VM']['database'] 
 user = config['VM']['user'] 
-password = config['VM']['password'] 
-driver = 'ODBC Driver 18 for SQL Server '
-#driver = config['PRODUCAO']['driver']
+password = config['VM']['password']
+driver = config['VM']['driver']
 
 
 def DBConnect():
@@ -21,7 +20,9 @@ def DBConnect():
                              host=host, 
                              database=database,
                              user=user, 
-                             password=password)
+                             password=password,
+                             )
+
     # dbConn = pyodbc.connect(DSN='SICNET',UID=user,PWD=password)
     return dbConn.cursor()
 
