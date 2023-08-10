@@ -2,3 +2,5 @@
 /include/
 /lib/
 /lib64/
+*.json
+ipython*

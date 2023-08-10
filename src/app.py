@@ -12,7 +12,7 @@ host =  config['VM']['host']
 database = config['VM']['database'] 
 user = config['VM']['user'] 
 password = config['VM']['password'] 
-driver = '/opt/microsoft/msodbcsql18/lib64/libmsodbcsql-18.3.so.1.1'
+driver = 'ODBC Driver 18 for SQL Server '
 #driver = config['PRODUCAO']['driver']
 
 
