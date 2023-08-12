@@ -21,8 +21,8 @@ def DBConnect():
                              database=database,
                              user=user, 
                              password=password,
-                             )
-
+                            )
+    
     # dbConn = pyodbc.connect(DSN='SICNET',UID=user,PWD=password)
     return dbConn.cursor()
 
