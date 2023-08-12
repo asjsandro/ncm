@@ -90,5 +90,3 @@ where
         print('Descricao: ',consulta['description'])
         print('Ncm: ',consulta['ncm'])
         print('Cest: ',consulta['cest'])
-            
-        
