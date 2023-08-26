@@ -52,20 +52,23 @@ def find_ncm_sic(ean, token):
     return objectxml
 if __name__ == '__main__':
     query = '''
-            SELECT TOP 10
-                t.codigo,
-                t.produto ,
-                t.fabricante ,
-                t.codipi ,
-                t.cest
-            from 
-                TABEST1 t 
-            where 
-                t.codipi is null
-                and t.codigo like ?
+  SELECT
+	t.codigo,
+	t.produto ,
+	t.fabricante ,
+	t.codipi ,
+	t.cest
+from
+	TABEST1 t
+where
+	t.codipi is null
+	and t.codigo NOT LIKE  '200%'
+	and t.fabricante !='SERVICOS'
+	and t.codigo not like 'SR.%'
+ORDER BY t.fabricante 
             '''
     cur = DBConnect()
-    produtos = DBQuery(cur,query, ['789%'])
+    produtos = DBQuery(cur,query, [''])
     print('Total de registros retornado da consulta: ', len(produtos))
     for produto in produtos:
         print('Pesquisando Produto:')
