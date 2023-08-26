@@ -62,13 +62,13 @@ from
 	TABEST1 t
 where
 	t.codipi is null
-	and t.codigo NOT LIKE  '200%'
+	and t.codigo NOT LIKE  ?
 	and t.fabricante !='SERVICOS'
-	and t.codigo not like 'SR.%'
+	and t.codigo not like ?
 ORDER BY t.fabricante 
             '''
     cur = DBConnect()
-    produtos = DBQuery(cur,query, [''])
+    produtos = DBQuery(cur,query, ['200%','SR.%'])
     print('Total de registros retornado da consulta: ', len(produtos))
     for produto in produtos:
         print('Pesquisando Produto:')
