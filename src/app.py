@@ -1,19 +1,19 @@
-import urllib3
-import json
-# Create an HTTP connection pool
-# Set the custom headers
 import configparser
 import pyodbc
+from zeep import Client
+import pprint as pp
+import time
+from lxml import objectify
 
 #Get environment variavel
 config = configparser.ConfigParser()
-config.read('config.ini')
-host =  config['VM']['host']
-database = config['VM']['database'] 
-user = config['VM']['user'] 
-password = config['VM']['password']
-driver = config['VM']['driver']
-
+config.read('./src/config.ini')
+host =  config['PRODUCAO']['host']
+database = config['PRODUCAO']['database'] 
+user = config['PRODUCAO']['user'] 
+password = config['PRODUCAO']['password']
+driver = config['PRODUCAO']['driver']
+token = config['PRODUCAO']['token_sic']
 
 def DBConnect():
     dbConn = pyodbc.connect(driver=driver, 
@@ -38,55 +38,40 @@ def DBQuery(cur, query, params = []):
         returndata.append(thisrow)
     return returndata
 
-
-
-def find_ncm(ean):
-    http = urllib3.PoolManager()
-    custom_headers = {
-    'X-Cosmos-Token': 'Hgm9hZI5iYtD43QHifSgiQ',
-        'Content-Type': 'application/json',
-        'User-Agent': 'asjsandro'
-        }
-
-    # Make a GET request to a URL with the custom headers
-    r = http.request('GET', f'https://api.cosmos.bluesoft.com.br/gtins/{ean}.json', None, headers=custom_headers)
-
-    # Check the status code of the response
-    if r.status == 200:
-        # If the status code is 200, the request was successful
-        # Do something with the response data
-        response_data = r.data
-        data     = json.loads(response_data.decode('utf-8'))
-        value = {
-            "description": data['description'],
-            "ncm": data['ncm']['code'],
-            "cest": data['cest']['code']
-        }
-        
-        return(value)
+def find_ncm_sic(ean, token):
+    '''
+    creditos: https://webkul.com/blog/python-soap-clients-with-zeep/
+    '''
+    wsdl = 'http://sicbr.com/wsinfoproduto/wsInfoProduto1.asmx?WSDL'
+    client = Client(wsdl=wsdl)
+    result = client.service.BuscaPorCodigo(ean, token).lower()
+    if result == '0':
+        return
     else:
-        return('request error!')
-    
+        objectxml = objectify.fromstring(result)
+    return objectxml
 if __name__ == '__main__':
     query = '''
-SELECT TOP 15
-	t.codigo,
-	t.produto ,
-	t.fabricante ,
-	t.codipi ,
-	t.cest
-from 
-	TABEST1 t 
-where 
-	t.codipi is null
-'''
-
+            SELECT TOP 10
+                t.codigo,
+                t.produto ,
+                t.fabricante ,
+                t.codipi ,
+                t.cest
+            from 
+                TABEST1 t 
+            where 
+                t.codipi is null
+                and t.codigo like ?
+            '''
     cur = DBConnect()
-    produtos = DBQuery(cur,query, [])
+    produtos = DBQuery(cur,query, ['789%'])
+    print('Total de registros retornado da consulta: ', len(produtos))
     for produto in produtos:
-
-        ean = produto['codigo']#'7891910000197'
-        consulta = find_ncm(ean)
-        print('Descricao: ',consulta['description'])
-        print('Ncm: ',consulta['ncm'])
-        print('Cest: ',consulta['cest'])
+        print('Pesquisando Produto:')
+        print('Codigo: ',produto['codigo'])
+        print('Descricao: ',produto['produto'])
+        ean = produto['codigo']
+        consulta = find_ncm_sic(ean, token)
+        pp.pprint(consulta)
+        # time.sleep(5)

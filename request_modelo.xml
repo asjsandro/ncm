@@ -1,0 +1,15 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <BuscaPorCodigoResponse xmlns="http://tempuri.org/">
+         <BuscaPorCodigoResult><![CDATA[<Codigo>7898416443510</codigo>
+<Produto>DEO COLONIA GOLDEN DREAMS STRONG 35ML</Produto>
+<Fabricante/>
+<Unidade>UND</Unidade>
+<CodIPI>33072090</CodIPI>
+<PesoBruto/>
+<PesoLiq/>
+<Aprovado/>
+<DataInc>28/07/2016 11:37:29</DataInc>]]></BuscaPorCodigoResult>
+      </BuscaPorCodigoResponse>
+   </soap:Body>
+</soap:Envelope>
