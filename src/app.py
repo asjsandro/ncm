@@ -65,7 +65,7 @@ where
 	and t.codigo NOT LIKE  ?
 	and t.fabricante !='SERVICOS'
 	and t.codigo not like ?
-ORDER BY t.fabricante 
+ORDER BY t.codigo 
             '''
     cur = DBConnect()
     produtos = DBQuery(cur,query, ['200%','SR.%'])
