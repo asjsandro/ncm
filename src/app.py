@@ -16,6 +16,30 @@ password = config['PRODUCAO']['password']
 driver = config['PRODUCAO']['driver']
 token = config['PRODUCAO']['token_sic']
 
+
+def DBConnect():
+    dbConn = pyodbc.connect(driver=driver, 
+                             host=host, 
+                             database=database,
+                             user=user, 
+                             password=password,
+                            )
+    
+    # dbConn = pyodbc.connect(DSN='SICNET',UID=user,PWD=password)
+    return dbConn.cursor()
+
+def DBQuery(cur, query, params = []):
+    # Run a DB Query and return the results as a list of dicts
+    cur.execute(query, params)
+    headers = [item[0] for item in cur.description] 
+    returndata = []
+    for x in cur:
+        thisrow = {}
+        for i, y in enumerate(x):
+            thisrow[headers[i]] = y
+        returndata.append(thisrow)
+    return returndata
+
 def add_root_to_xml(xml_string):
     return f"<root>{xml_string}</root>"
 
@@ -57,29 +81,6 @@ def consulta_produto(codigo_produto, token):
             "datainc": response.find("datainc").text
         }
     return produto
-
-def DBConnect():
-    dbConn = pyodbc.connect(driver=driver, 
-                             host=host, 
-                             database=database,
-                             user=user, 
-                             password=password,
-                            )
-    
-    # dbConn = pyodbc.connect(DSN='SICNET',UID=user,PWD=password)
-    return dbConn.cursor()
-
-def DBQuery(cur, query, params = []):
-    # Run a DB Query and return the results as a list of dicts
-    cur.execute(query, params)
-    headers = [item[0] for item in cur.description] 
-    returndata = []
-    for x in cur:
-        thisrow = {}
-        for i, y in enumerate(x):
-            thisrow[headers[i]] = y
-        returndata.append(thisrow)
-    return returndata
 
 if __name__ == '__main__':
     query = '''
