@@ -68,7 +68,6 @@ def consulta_produto(codigo_produto, token):
     if response.text =='0' :
         produto = {'root':'0'}
     else:
-        print(response.text)
         produto = {
             "codigo": response.find("codigo").text,
             "produto": response.find("produto").text,
@@ -104,10 +103,14 @@ ORDER BY
     produtos = DBQuery(cur,query, ['200%','SR.%'])
     print('Total de registros retornado da consulta: ', len(produtos))
     for produto in produtos:
+        print(80*'=')
         print('Pesquisando Produto:')
         print('Codigo: ',produto['codigo'])
         print('Descricao: ',produto['produto'])
         ean = produto['codigo']
         consulta = consulta_produto(ean, token)
         pp.pprint(consulta)
+        print('Final da pesquisa!')
+        print(80*'=')
+        print('\n')
         time.sleep(2)
