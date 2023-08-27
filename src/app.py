@@ -16,7 +16,6 @@ password = config['PRODUCAO']['password']
 driver = config['PRODUCAO']['driver']
 token = config['PRODUCAO']['token_sic']
 
-
 def DBConnect():
     dbConn = pyodbc.connect(driver=driver, 
                              host=host, 
