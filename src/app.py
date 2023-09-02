@@ -82,7 +82,7 @@ def consulta_produto(codigo_produto, token):
 
 if __name__ == '__main__':
     query = '''
- SELECT
+ SELECT top 15
 	t.codigo,
 	t.produto ,
 	t.fabricante ,
@@ -101,6 +101,7 @@ ORDER BY
     cur = DBConnect()
     produtos = DBQuery(cur,query, ['200%','SR.%'])
     print('Total de registros retornado da consulta: ', len(produtos))
+    prod = []
     for produto in produtos:
         print(80*'=')
         print('Pesquisando Produto:')
@@ -109,7 +110,11 @@ ORDER BY
         ean = produto['codigo']
         consulta = consulta_produto(ean, token)
         pp.pprint(consulta)
+        prod.append(consulta)
         print('Final da pesquisa!')
         print(80*'=')
         print('\n')
         time.sleep(2)
+        
+print(len(prod))
+pp.pprint(prod)
