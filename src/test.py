@@ -43,15 +43,19 @@ def get_product_data(codigo):
     """
     
     response = requests.post(api_url, data=body, headers=headers)
-    pp.pprint(response.text)
+    # pp.pprint(response.text)
     root = ET.fromstring(response.content)
-    pp.pprint(root)
+    # pp.pprint(root.text)
     # Adapte a extração dos dados conforme o XML retornado
+    print(get_element_text(root, './/CodIPI'))
+    print(get_element_text(root, './/PesoLiq'))
+    print(get_element_text(root, './/PesoBruto'))
+    print(get_element_text(root, './/Fabricante'))
     product_data = {
-        'codipi': get_element_text(root, './/CodIPI'),
-        'pesoliq': get_element_text(root, './/PesoLiq'),
-        'pesobruto': get_element_text(root,'..//PesoBruto'),
-        'fabricante': get_element_text(root, './/Fabricante'),
+        'CodIPI': get_element_text(root, './/CodIPI'),
+        'PesoLiq': get_element_text(root, './/PesoLiq'),
+        'PesoBruto': get_element_text(root,'..//PesoBruto'),
+        'Fabricante': get_element_text(root, './/Fabricante'),
         'codigo': codigo
     }
     
@@ -61,7 +65,7 @@ def get_products_with_empty_codipi():
     """Obtém a lista de códigos de produtos com CODIPI vazio ou nulo"""
     with pyodbc.connect(cnxn_str) as cnxn:
         cursor = cnxn.cursor()
-        cursor.execute("SELECT top 10 codigo FROM tabest1 t WHERE t.codipi IS NULL or t.codipi = ''")
+        cursor.execute("SELECT top 30 codigo FROM tabest1 t WHERE t.codipi IS NULL or t.codipi = ''")
         return [row.codigo for row in cursor.fetchall()]
 
 def update_product_in_database(product_data):
@@ -76,7 +80,7 @@ def update_product_in_database(product_data):
         """
         
         cursor.execute(update_sql,
-                       product_data['codipi'],
+                       product_data['CodIPI'],
                        product_data['codigo'])
         cnxn.commit()
 
@@ -88,7 +92,7 @@ def main():
             print(f"Produto com código {codigo} não encontrado na API.")
         else:
             # update_product_in_database(product_data)
-            print(f"Produto com código {codigo} atualizado com NCM: {product_data['codipi']} sucesso!")
+            print(f"Produto com código {codigo} atualizado com NCM: {product_data['CodIPI']} sucesso!")
 
 if __name__ == "__main__":
     main()
